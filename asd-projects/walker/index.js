@@ -14,6 +14,8 @@ function runProgram(){
   var BOARD_HEIGHT = $("#board").height();
   var WALKER_WIDTH = $("#walker").width();
   var WALKER_HEIGHT = $("#walker").height();
+  var WALKER2_WIDTH = $("#walker2").width();
+  var WALKER2_HEIGHT = $("#walker2").height();
   var KEY = {
     UP: 38,
     DOWN: 40,
@@ -33,14 +35,18 @@ function runProgram(){
   xPos: 0,
   yPos: 0,
   speedX: 0,
-  speedY: 0
+  speedY: 0,
+  width: WALKER_WIDTH,
+  height: WALKER_HEIGHT,
  }
 
  var walker2 = {
-  xPos: 0,
-  yPos: 0,
+  xPos: 390,
+  yPos: 380,
   speedX: 0,
-  speedY: 0
+  speedY: 0,
+  width: WALKER2_WIDTH,
+  height: WALKER2_HEIGHT,
  }
 
   // one-time setup
@@ -60,6 +66,7 @@ function runProgram(){
     repositionGameItem();
     redrawGameItem();
     wallCollision();
+    collideOccur();
   }
   
   /* 
@@ -67,41 +74,32 @@ function runProgram(){
   */
   function handleKeyDown(event) {
     if (event.which === KEY.UP) {
-      console.log("up pressed");
       walker.speedY = -5;
     }
     if (event.which === KEY.DOWN) {
-      console.log("down pressed");
       walker.speedY = +5;
     }
     if (event.which === KEY.LEFT) {
-      console.log("left pressed");
       walker.speedX = -5;
     }
     if (event.which === KEY.RIGHT) {
-      console.log("right pressed");
       walker.speedX = 5;
     }
 
 // start of player 2
       if (event.which === KEY.W) {
-        console.log("W pressed");
         walker2.speedY = -5;
       }
       if (event.which === KEY.S) {
-        console.log("S pressed");
         walker2.speedY = +5;
       }
       if (event.which === KEY.A) {
-        console.log("A pressed");
         walker2.speedX = -5;
       }
       if (event.which === KEY.D) {
-        console.log("D pressed");
         walker2.speedX = 5;
       }
       if (event.which === KEY.SPACE) {
-        console.log("space pressed");
         colorChange();
       }
   }
@@ -123,6 +121,37 @@ function runProgram(){
   ////////////////////////////////////////////////////////////////////////////////
   ////////////////////////// HELPER FUNCTIONS ////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////
+  function doCollide(obj1, obj2) {
+    // TODO: calculate and store the remaining
+    // sides of the square1
+    obj1.leftX = obj1.xPos;
+    obj1.topY =  obj1.yPos;
+    obj1.rightX =  obj1.xPos + obj1.width;
+    obj1.bottomY =  obj1.yPos + obj1.height;
+
+    // TODO: Do the same for square2
+    obj2.leftX = obj2.xPos;
+    obj2.topY = obj2.yPos;
+    obj2.rightX = obj2.xPos + obj2.width;
+    obj2.bottomY = obj2.yPos + obj2.height;
+
+    // TODO: Return true if they are overlapping, false otherwise
+	if(obj2.rightX > obj1.leftX &&
+       obj2.leftX < obj1.rightX &&
+       obj2.bottomY > obj1.topY){
+      return true;
+    }
+	else {
+      return false;
+    }
+}
+
+  function collideOccur(){
+    if(doCollide(walker, walker2)){
+      console.log("Tag, you're it!");
+      
+    }
+  }
   function repositionGameItem(){
     walker.xPos += walker.speedX;
     walker.yPos += walker.speedY;
